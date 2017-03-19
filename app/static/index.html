@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+  <link
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    rel="stylesheet">
+  <link rel="stylesheet" href="static/css/tether.css"/>
+  <link rel="stylesheet" href="static/css/bootstrap.css"/>
+  <style>
+    html {
+      height: 100%;
+    }
+
+    body {
+      height: 100%;
+      background: linear-gradient(45deg, #41295a 0%, #2f0743 100%);
+      color: white;
+      font-family: 'Slabo 27px', serif;
+    }
+
+    .jumbotron {
+      background-color: transparent !important;
+    }
+
+    .jumbotron .form-control {
+      border-color: #204;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+    }
+
+    .jumbotron p {
+      margin-top: 2em;
+    }
+
+    .page-link {
+      background-color: #742999;
+      border: 1px solid #9449b9;
+    }
+
+    .page-link:hover {
+      background-color: #9449b9;
+      border: 1px solid #9449b9;
+    }
+
+    .page-item.active .page-link {
+      background-color: transparent;
+      border-color: #9449b9;
+    }
+
+    .table thead th {
+      border-color: #9449b9;
+    }
+
+    .table th, .table td {
+      border-color: #9449b9;
+    }
+
+    thead tr th:first-child,
+    tbody tr td:first-child {
+      width: 15em;
+    }
+
+    .rota-title {
+      width:100%;
+      font-size: 3em;
+    }
+
+    .entry-editable:hover::after {
+      font-family: FontAwesome;
+      content: " \f040";
+      position: absolute;
+      right: 0;
+    }
+
+    .rota-title:hover::after {
+      font-family: FontAwesome;
+      content: " \f040";
+      position: absolute;
+      right: 0;
+    }
+
+    .fullscreenDiv {
+      font-family: 'Pacifico', cursive;
+      width: 100%;
+      font-size: 3em;
+    }
+
+    .jumbotron .form-control {
+      border: 1px #9449b9 solid;
+    }
+
+    .rota-display .form-control {
+      background-color: transparent;
+      border: none;
+      color: white;
+      padding: 0px;
+      font-family: 'Slabo 27px', serif;
+      /*border-bottom: 1px white solid;*/
+      font-size: 1em;
+      margin-bottom: -2px;
+      margin-top: 2px;
+    }
+
+    .rota-display .form-control:focus {
+      background-color: transparent;
+      color: white;
+      border-bottom: 1px white solid;
+    }
+
+    .no-entry {
+      font-style: italic;
+    }
+
+    .rota-display .form-control.rota-title-input {
+      font-size: 3em;
+      padding-top: 5px;
+      margin-bottom: 6px;
+    }
+
+    .rota-display .form-control.rota-title-input:focus {
+      font-size: 3em;
+      padding-top: 6px;
+      margin-bottom: 6px;
+    }
+
+    .weekend {
+      background: #440969;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="container"></div>
+  </div>
+
+  <script src="/static/js/tether.min.js"></script>
+  <script src="/static/js/jquery-3.1.1.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/react-with-addons.js"></script>
+  <script src="/static/js/react-dom.js"></script>
+  <script
+          src="/static/js/moment-with-locales.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
