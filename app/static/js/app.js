@@ -42,7 +42,7 @@ var editableText = React.createClass({
   },
 
   handleRefreshFinished: function() {
-    this.setState({ isRefreshing: false });
+    this.setState({ isRefreshing: false, isEditing: false });
   },
 
   handleKeyPress: function(e) {
@@ -60,16 +60,22 @@ var editableText = React.createClass({
 
   render: function() {
     if (this.state.isRefreshing) {
-      console.log("refreshing");
-      return React.createElement('span', { className: 'fa fa-spinner fa-spin' });
+      return React.createElement('div', { className: this.props.displayClass },
+        React.createElement('span', { className: ' fa fa-spinner fa-spin' })
+        );
     }
 
     if (this.state.isEditing) {
-      console.log("editing");
-      return React.createElement('input', { onFocus: this.handleFocus, onKeyPress: this.handleKeyPress, autoFocus: true, className: this.props.editClass, onBlur: this.handleBlur, defaultValue: this.props.text });
+      return React.createElement('input', {
+        onFocus: this.handleFocus,
+        onKeyPress: this.handleKeyPress,
+        autoFocus: true,
+        className: this.props.editClass,
+        onBlur: this.handleBlur,
+        defaultValue: this.props.text
+      });
     }
 
-    console.log("displaying");
     var text = this.props.text;
     var className = this.props.displayClass;
     if (text == "")
@@ -88,18 +94,27 @@ var monthControl = React.createClass({
     month: React.PropTypes.string.isRequired,
     onNavigatePrevious: React.PropTypes.func.isRequired,
     onNavigateNext: React.PropTypes.func.isRequired,
+    loading: React.PropTypes.bool,
   },
 
   render: function() {
     var friendlyMonth = moment({ year: this.props.year, month: this.props.month-1 })
       .format('MMMM YYYY');
+    var label = React.createElement('span', { className: "page-link" }, friendlyMonth);
+    if (this.props.loading)
+    {
+      label = React.createElement('span', { className: "page-link" },
+          React.createElement('span', { className: "fa fa-spinner fa-spin" })
+          );
+    }
+
     return React.createElement('nav', {},
         React.createElement('ul', { className: "pagination" },
           React.createElement('li', { className: "page-item" },
             React.createElement('a', { className: "page-link", onClick: this.props.onNavigatePrevious }, "Previous")
           ),
           React.createElement('li', { className: "page-item active" },
-            React.createElement('span', { className: "page-link" }, friendlyMonth)
+            label
           ),
           React.createElement('li', { className: "page-item" },
             React.createElement('a', { className: "page-link", onClick: this.props.onNavigateNext }, "Next")
@@ -136,7 +151,9 @@ var rota = React.createClass({
             year: this.props.year,
             month: this.props.month,
             onNavigatePrevious: this.props.onNavigatePrevious,
-            onNavigateNext: this.props.onNavigateNext }),
+            onNavigateNext: this.props.onNavigateNext,
+            loading: this.props.loading
+        }),
         React.createElement('table', { className: "table" },
           React.createElement('thead', {}, React.createElement('tr', {},
               React.createElement('th', {}, 'Date'),
@@ -234,7 +251,6 @@ function onEntryChangeFactory (uuid, date) {
   };
 }
 
-
 function explodeParams() {
   return window.location.hash.replace(/^#\/?|\/$/g, '').split('/');
 }
@@ -266,10 +282,14 @@ function onNavigated() {
     month = currentDate.getMonth() + 1;
   }
 
-  this.setState({ uuid: uuid, year: year, month: month, screen: SCREEN_LOADING });
+  this.setState({ uuid: uuid, year: year, month: month });
+  if (!this.state.loading)
+  {
+    this.setState({ screen: SCREEN_LOADING });
+  }
 
   var getEntries = function (response) {
-    this.setState({ screen: SCREEN_INDEX, entries: JSON.parse(response) });
+    this.setState({ screen: SCREEN_INDEX, loading: false, entries: JSON.parse(response) });
   }.bind(this);
 
   var getRota = function (response) {
@@ -293,6 +313,7 @@ function onNavigateNext() {
     year += 1;
     month = "01";
   }
+  this.setState({ loading: true });
   setLocation(params[0], year, month);
 }
 
@@ -305,6 +326,7 @@ function onNavigatePrevious() {
     year -= 1;
     month = "12";
   }
+  this.setState({ loading: true });
   setLocation(params[0], year, month);
 }
 
@@ -313,7 +335,6 @@ window.addEventListener('hashchange', onNavigated, false);
 var state = {};
 function setState(changes) {
   Object.assign(state, changes);
-  // console.log("setState: %o",state);
   var rootElement;
   if (state.screen == SCREEN_CREATE_ROTA) {
     rootElement = React.createElement(createForm, state);
