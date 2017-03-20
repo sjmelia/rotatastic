@@ -37,8 +37,12 @@ var editableText = React.createClass({
   },
 
   handleBlur: function(e) {
-    this.setState({ isEditing: false });
-    this.props.onChange(e.target.value);
+    this.setState({ isEditing: false, isRefreshing: true });
+    this.props.onChange(e.target.value, this.handleRefreshFinished);
+  },
+
+  handleRefreshFinished: function() {
+    this.setState({ isRefreshing: false });
   },
 
   handleKeyPress: function(e) {
@@ -55,9 +59,17 @@ var editableText = React.createClass({
   },
 
   render: function() {
+    if (this.state.isRefreshing) {
+      console.log("refreshing");
+      return React.createElement('span', { className: 'fa fa-spinner fa-spin' });
+    }
+
     if (this.state.isEditing) {
+      console.log("editing");
       return React.createElement('input', { onFocus: this.handleFocus, onKeyPress: this.handleKeyPress, autoFocus: true, className: this.props.editClass, onBlur: this.handleBlur, defaultValue: this.props.text });
     }
+
+    console.log("displaying");
     var text = this.props.text;
     var className = this.props.displayClass;
     if (text == "")
@@ -185,18 +197,19 @@ function onCreateRota (e) {
     }.bind(this)});
 }
 
-function onNameUpdated (text) {
+function onNameUpdated (text, onRefreshFinished) {
   $.ajax(apiOrigin + "/rota/" + state.uuid, {
     data: JSON.stringify({ name: text }),
     contentType: 'application/json',
     type: 'PUT',
     success: function(response) {
       setState(response);
+      onRefreshFinished();
     }});
 }
 
 function onEntryChangeFactory (uuid, date) {
-  return function (text) {
+  return function (text, onRefreshFinished) {
     var dateElements = date.split('-');
     var year = dateElements[0];
     var month = dateElements[1];
@@ -216,6 +229,7 @@ function onEntryChangeFactory (uuid, date) {
           }
         }
         setState({ entries: entries });
+        onRefreshFinished();
       }});
   };
 }
@@ -239,8 +253,20 @@ function onNavigated() {
 
   // otherwise load the rota with the given id
   var params = explodeParams();
+  var uuid = params[0];
+  var year = params[1];
+  var month = params[2];
 
-  this.setState({ uuid: params[0], year: params[1], month: params[2], screen: SCREEN_LOADING });
+  var currentDate = new Date();
+  if (typeof(year) === 'undefined') {
+    year = currentDate.getFullYear();
+  }
+
+  if (typeof(month) === 'undefined') {
+    month = currentDate.getMonth() + 1;
+  }
+
+  this.setState({ uuid: uuid, year: year, month: month, screen: SCREEN_LOADING });
 
   var getEntries = function (response) {
     this.setState({ screen: SCREEN_INDEX, entries: JSON.parse(response) });
@@ -248,12 +274,12 @@ function onNavigated() {
 
   var getRota = function (response) {
     this.setState(response);
-    $.ajax(apiOrigin + "/rota/" + params[0] + "/entries/" + params[1] + "/" + params[2], {
+    $.ajax(apiOrigin + "/rota/" + uuid + "/entries/" + year + "/" + month, {
         success: getEntries
     });
   }.bind(this);
 
-  $.ajax(apiOrigin + "/rota/" + params[0], {
+  $.ajax(apiOrigin + "/rota/" + uuid, {
     success: getRota
   });
 }
