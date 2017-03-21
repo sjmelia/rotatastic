@@ -76,7 +76,7 @@ def update_rota(uuid):
     return get_rota(uuid)
 
 def day_to_str(year, month, day):
-    return "%04d-%02d-%02d" % (int(year), int(month), day)
+    return "%04d-%02d-%02d" % (int(year), int(month), int(day))
 
 def query_to_dict(query):
     colnames = [d[0] for d in query.description]
@@ -108,6 +108,18 @@ def get_rota_entries(uuid, year, month):
             entries.append(dict(date=datestr, entry=''))
 
     js = json.dumps(entries)
+    return Response(js, status=200)
+
+@app.route('/rota/<uuid>/entries/<year>/<month>/<day>')
+def get_rota_entry(uuid, year, month, day):
+    date = day_to_str(year, month, day)
+    query = get_db().execute('''select * from entries
+        join rotas on entries.rota_id = rotas.id
+        where rotas.uuid = ?
+        and date(entries.date) = date(?)''',
+        [uuid, date])
+    entries = query_to_dict(query)
+    js = json.dumps(entries[0])
     return Response(js, status=200)
 
 @app.route('/rota/<uuid>/entries/<year>/<month>/<day>', methods = ['PUT'])
