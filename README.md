@@ -20,7 +20,7 @@ pip install -r requirements.txt
 To setup db and run:
 
 ```
-export FLASK_APP=main
+export FLASK_APP=main.py
 export FLASK_DEBUG=true
 flask initdb
 flask run

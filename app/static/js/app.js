@@ -240,7 +240,8 @@ function onEntryChangeFactory (uuid, date) {
         response = JSON.parse(response);
         // find the entry with that name
         var entries = state.entries.slice();
-        for (var entry of entries) {
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
           if (entry.date == response.date) {
             entry.entry = response.entry;
           }
