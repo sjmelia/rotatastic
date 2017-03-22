@@ -274,13 +274,19 @@ function onNavigated() {
   var year = params[1];
   var month = params[2];
 
-  var currentDate = new Date();
-  if (typeof(year) === 'undefined') {
-    year = currentDate.getFullYear();
-  }
+  if (typeof(year) === 'undefined' || typeof(month) === 'undefined')
+  {
+    var currentDate = new Date();
+    if (typeof(year) === 'undefined') {
+      year = currentDate.getFullYear();
+    }
 
-  if (typeof(month) === 'undefined') {
-    month = currentDate.getMonth() + 1;
+    if (typeof(month) === 'undefined') {
+      month = currentDate.getMonth() + 1;
+    }
+
+    setLocation(uuid, year, month);
+    return;
   }
 
   this.setState({ uuid: uuid, year: year, month: month });
