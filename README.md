@@ -1,9 +1,23 @@
-Rota Server
+Rotatastic!
 ===========
 
+Rotatastic is an app for daily rotas built with Python Flask and React.
+
+See it in production at http://www.rotatastic.com/
+
+It's an example of a "low-fi" React app - although not quite vanilla JS; there
+is no npm, webpack, babel, flux/redux etc. - just a spot of jquery, moment.js,
+and bootstrap 4. All the rest of the client side logic can be found in
+`/app/static/js/app.js`
+
+Deploying with Docker
+---------------------
+
+To run, storing the sqlite db to `/var/db` on the host:
+
 ```
-docker build -t steve/rota .
-docker run -d -v /home/steve/rota:/db --restart=unless-stopped -p 32600:80 steve/rota
+docker build -t arrayofbytes/rotatastic .
+docker run -d -v /var/db:/db --restart=unless-stopped -p 32600:80 arrayofbytes/rotatastic
 ```
 
 Development Environment
@@ -17,7 +31,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-To setup db and run:
+To initialise db and run:
 
 ```
 export FLASK_APP=main.py
