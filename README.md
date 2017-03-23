@@ -6,9 +6,9 @@ Rotatastic is an app for daily rotas built with Python Flask and React.
 See it in production at http://www.rotatastic.com/
 
 It's an example of a "low-fi" React app - although not quite vanilla JS; there
-is no npm, webpack, babel, flux/redux etc. - just a spot of jquery, moment.js,
-and bootstrap 4. All the rest of the client side logic can be found in
-`/app/static/js/app.js`
+is no npm, webpack, babel, flux/redux, jsx  etc. - just a spot of jquery,
+moment.js, and bootstrap 4. All the rest of the client side logic can be found
+in `/app/static/js/app.js`
 
 Deploying with Docker
 ---------------------
